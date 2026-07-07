@@ -2,8 +2,8 @@
 
 A personal, holographic voice assistant — with a memory it draws as glowing, connected lines, just like JARVIS in the movies.
 
-- **Talk mode** — your browser talks to the Anthropic API directly and reads replies aloud.
-- **Build mode** — your spoken command goes to a small **local** Node bridge that runs **Claude Code** headless to actually edit files in a project.
+- **Talk mode** — talk to JARVIS and hear it reply. It thinks using **your Claude Pro/Max subscription** through a small local bridge — **no API key needed** — or an Anthropic API key if you happen to have one.
+- **Build mode** — your spoken command goes to that same **local** bridge, which runs **Claude Code** headless to actually edit files in a project.
 - **Memory core** — every exchange becomes a glowing node on a live holographic graph. Related memories connect with lines; new memories spark in with a travelling pulse. It's stored in your browser and rendered on an HTML canvas.
 
 Everything is one static page (`public/index.html`) plus one optional local script (`bridge/server.mjs`). No build step, no frameworks, no accounts.
@@ -19,21 +19,29 @@ jarvis/
 
 ---
 
-## 1. Try it locally (2 minutes)
+## 1. Run it locally (2 minutes, no API key)
 
-Any static file server works. The simplest:
+**a) Start JARVIS's brain.** In a terminal, from this folder:
 
 ```bash
-cd public
-python3 -m http.server 5173
-#   → open http://localhost:5173
+node bridge/server.mjs
 ```
+This runs the `claude` CLI signed in with **your Claude Pro/Max subscription — no API key, no per-token billing.** (Install [Claude Code](https://claude.com/claude-code) and run `claude` once to log in if you haven't.)
 
-or with Node: `npx serve public`.
+**b) Open the orb.** Any static server works:
 
-Then click the **⚙ Settings** gear and paste your **Anthropic API key** (starts with `sk-ant-…`). That's all Talk mode needs.
+```bash
+cd public && python3 -m http.server 5173     # → open http://localhost:5173
+```
+(or `npx serve public`.)
 
-> Press **Space** (or tap the orb) to speak. Type in the box and hit **Enter** if you'd rather not use the mic. Press **M** to open the **Memory** view.
+That's it — press **Space** or tap the orb and talk. On first load JARVIS pings the bridge and tells you if it isn't running.
+
+> **Prefer an API key instead?** Open **⚙ Settings**, set **Talk brain → Anthropic API key**, and paste a `sk-ant-…` key from [console.anthropic.com](https://console.anthropic.com). Then Talk mode needs no bridge (only Build mode does).
+>
+> Press **Space** (or tap the orb) to speak. Type in the box and hit **Enter** to skip the mic. Press **M** for the **Memory** view.
+
+> **Which do I have?** A **Claude Pro/Max subscription** (the one you pay ~$20+/mo for at claude.ai) powers the apps *and the `claude` CLI* — that's the no-key path above. An **Anthropic API key** is a separate, pay-as-you-go thing from console.anthropic.com. You don't need one.
 
 ---
 
@@ -58,9 +66,11 @@ Deploy the `public/` folder as a static site.
 1. Push this repo to GitHub.
 2. In [Vercel](https://vercel.com), **New Project → Import** the repo.
 3. Set **Root Directory** to `public` (or leave root and set the output dir to `public`). No build command needed — it's static.
-4. Deploy. Open the URL, add your API key in Settings, and **Talk mode works immediately.**
+4. Deploy and open the URL.
 
-> Talk mode calls `https://api.anthropic.com` straight from your browser using the `anthropic-dangerous-direct-browser-access` header. Your key lives only in your browser's `localStorage` — it is never sent to Vercel or anyone but Anthropic. Use a scoped key, and remember anyone with access to that browser profile can read it.
+> **Two ways Talk mode works once hosted:**
+> - **Your subscription (no key):** keep the bridge running locally (`node bridge/server.mjs`). Your hosted page can still reach `http://localhost:8787` because the request is made **by your browser, on your machine** — it never leaves your computer. Chrome and Firefox allow an HTTPS page to call `http://localhost`; Safari is stricter, so on Safari just run the page locally (Step 1).
+> - **API key:** set **Talk brain → Anthropic API key** in Settings. The page then calls `https://api.anthropic.com` directly (via the `anthropic-dangerous-direct-browser-access` header). Your key lives only in your browser's `localStorage` — never sent to Vercel or anyone but Anthropic. Use a scoped key.
 
 Alternatives: Netlify, Cloudflare Pages, GitHub Pages — all work the same way (serve the `public/` folder).
 
@@ -68,7 +78,7 @@ Alternatives: Netlify, Cloudflare Pages, GitHub Pages — all work the same way 
 
 ## 4. Build mode (runs on your machine)
 
-Build mode lets you **speak a change and have Claude Code make it** in a real project directory.
+Build mode lets you **speak a change and have Claude Code make it** in a real project directory. It uses the **same bridge** as Talk mode — `/talk` just answers, `/build` edits files.
 
 ### Prerequisites
 - [Claude Code](https://claude.com/claude-code) installed and logged in (`claude` on your `PATH`).
@@ -125,4 +135,4 @@ A fully cloud-hosted Build mode would need a real backend running the [Claude Ag
 | Switch Talk / Build | top-bar toggle |
 | Settings (key, model, voice, bridge) | **⚙** |
 
-Talk mode uses `claude-opus-4-8` by default (switchable to `claude-sonnet-5` / `claude-haiku-4-5` in Settings). Speech in/out uses your browser's built-in Web Speech APIs — best support is in Chrome/Edge; other browsers fall back to typing.
+By default Talk mode thinks with your **Claude subscription** (via the bridge) on `claude-opus-4-8`, switchable to `claude-sonnet-5` / `claude-haiku-4-5` in Settings. Speech in/out uses your browser's built-in Web Speech APIs — best support is in Chrome/Edge; other browsers fall back to typing.

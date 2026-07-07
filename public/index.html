@@ -314,9 +314,18 @@
       <p class="sub">Settings live only in this browser. Nothing is sent anywhere except the requests you make.</p>
 
       <div class="field">
-        <label>Anthropic API key <span style="color:var(--ink-dim)">(Talk mode)</span></label>
-        <input id="cfgKey" type="password" placeholder="sk-ant-…" />
-        <div class="hint warn">Stored in localStorage on this device only. Anyone with access to this browser can read it. Use a scoped key.</div>
+        <label>Talk brain</label>
+        <select id="cfgBrain">
+          <option value="local">Local Claude · your Pro/Max login — no API key</option>
+          <option value="api">Anthropic API key</option>
+        </select>
+        <div class="hint">“Local Claude” runs through the bridge (start it with <b>node bridge/server.mjs</b>) using your Claude subscription — no key, no per-token billing. Choose “Anthropic API key” only if you have a console.anthropic.com key.</div>
+      </div>
+
+      <div class="field">
+        <label>Anthropic API key <span style="color:var(--ink-dim)">(optional)</span></label>
+        <input id="cfgKey" type="password" placeholder="sk-ant-…  (only for the API-key brain)" />
+        <div class="hint warn">Only needed if Talk brain = Anthropic API key. Stored in this browser's localStorage; anyone with access to it can read it. Use a scoped key.</div>
       </div>
 
       <div class="row">
@@ -366,7 +375,7 @@ const LS = {
 };
 
 const store = {
-  cfg: LS.get("jarvis.cfg",{ key:"", model:"claude-opus-4-8", bridge:"http://localhost:8787", speak:true, voice:"" }),
+  cfg: LS.get("jarvis.cfg",{ key:"", brain:"local", model:"claude-opus-4-8", bridge:"http://localhost:8787", speak:true, voice:"" }),
   memories: LS.get("jarvis.memories",[]),   // {id,text,role,topics[],ts}
   links: LS.get("jarvis.links",[]),         // {a,b,strength}
   chat: LS.get("jarvis.chat",[]),           // {role:'user'|'assistant', content}
@@ -756,25 +765,36 @@ const Voice=(()=>{
 })();
 
 /* ================================================================
-   4. back-ends — Anthropic (Talk) + local bridge (Build)
+   4. back-ends
+      Talk  → local bridge /talk   (your Claude subscription — no key)  [default]
+              or Anthropic API      (only if you have a console key)
+      Build → local bridge /build  (Claude Code edits files)
    ================================================================ */
-async function askClaude(userText){
+const bridgeBase=()=>(store.cfg.bridge||"http://localhost:8787").replace(/\/+$/,"");
+
+// Talk through YOUR subscription — the bridge runs the `claude` CLI (no API key).
+async function askBridgeTalk(userText, history){
+  let res;
+  try{
+    res=await fetch(bridgeBase()+"/talk",{ method:"POST", headers:{"content-type":"application/json"},
+      body:JSON.stringify({ prompt:userText, history, model:store.cfg.model }) });
+  }catch(e){ throw new Error("JARVIS's brain is offline. In a terminal, run:  node bridge/server.mjs  — it uses your Claude subscription, no API key."); }
+  if(!res.ok){ let d=""; try{ d=(await res.json()).error||""; }catch{} throw new Error(`Bridge ${res.status}: ${d||res.statusText}`); }
+  return (await res.json()).reply || "…";
+}
+
+// Talk through a console.anthropic.com API key (optional alternative).
+async function askClaude(userText, history){
   const cfg=store.cfg;
-  if(!cfg.key){ throw new Error("No API key set — open Settings (⚙)."); }
-  const history=store.chat.slice(-12).map(m=>({role:m.role,content:m.content}));
+  if(!cfg.key){ throw new Error("No API key saved. Open Settings ⚙ and either add a key, or switch the Talk brain to Local Claude (no key)."); }
   const body={
     model:cfg.model, max_tokens:400,
     system:"You are JARVIS, a witty, precise personal AI assistant in the spirit of Tony Stark's assistant. Replies are spoken aloud, so be concise (1–4 sentences), natural, and lightly urbane. Address the user as 'sir' occasionally but sparingly. No markdown, lists, or emoji — just spoken prose.",
-    messages:[...history,{role:"user",content:userText}]
+    messages:[...history.map(m=>({role:m.role,content:m.content})),{role:"user",content:userText}]
   };
   const res=await fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",
-    headers:{
-      "content-type":"application/json",
-      "x-api-key":cfg.key,
-      "anthropic-version":"2023-06-01",
-      "anthropic-dangerous-direct-browser-access":"true"
-    },
+    headers:{ "content-type":"application/json","x-api-key":cfg.key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true" },
     body:JSON.stringify(body)
   });
   if(!res.ok){ let d=""; try{ d=(await res.json()).error?.message||""; }catch{} throw new Error(`Anthropic ${res.status}: ${d||res.statusText}`); }
@@ -782,11 +802,11 @@ async function askClaude(userText){
   return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join(" ").trim();
 }
 
+// Build through the local bridge → Claude Code edits files.
 async function askBridge(prompt){
-  const url=(store.cfg.bridge||"http://localhost:8787").replace(/\/+$/,"")+"/build";
   let res;
   try{
-    res=await fetch(url,{ method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify({prompt}) });
+    res=await fetch(bridgeBase()+"/build",{ method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify({prompt}) });
   }catch(e){ throw new Error("Bridge offline. Run:  node bridge/server.mjs"); }
   if(!res.ok){ let d=""; try{ d=(await res.json()).error||""; }catch{} throw new Error(`Bridge ${res.status}: ${d||res.statusText}`); }
   const data=await res.json();
@@ -831,14 +851,16 @@ const App=(()=>{
   async function handle(text){
     text=(text||"").trim(); if(!text) return;
     Voice.shutUp();
+    const priorChat=store.chat.slice(-12);           // history BEFORE this turn
     addMsg("user",text);
     store.chat.push({role:"user",content:text});
     remember(text,"user");
     setState("thinking");
     try{
       let reply;
-      if(document.body.dataset.mode==="build"){ reply=await askBridge(text); }
-      else { reply=await askClaude(text); }
+      if(document.body.dataset.mode==="build")  reply=await askBridge(text);
+      else if(store.cfg.brain==="api")          reply=await askClaude(text, priorChat);
+      else                                      reply=await askBridgeTalk(text, priorChat);
       addMsg("assistant",reply);
       store.chat.push({role:"assistant",content:reply}); store.saveChat();
       remember(reply,"jarvis");
@@ -896,7 +918,22 @@ const App=(()=>{
     else { Voice.start(t=>{ Voice.stop(); handle(t); }); }
   }
 
+  // first-run guidance: check whether JARVIS's brain (the bridge) is reachable
+  function bootHint(){
+    if(store.cfg.brain==="api"){
+      if(!store.cfg.key) toast("Talk brain is set to API key but none is saved — add one in Settings ⚙, or switch to Local Claude (no key).",6500);
+      return;
+    }
+    fetch(bridgeBase()+"/health").then(r=>r.ok?r.json():Promise.reject()).then(()=>{
+      $("#statusText").textContent = document.body.dataset.mode==="build"?"Build mode":"Online";
+      toast("Connected to your local Claude — Talk mode ready, no API key needed.",4200);
+    }).catch(()=>{
+      toast("To talk, start JARVIS's brain in a terminal:  node bridge/server.mjs   (uses your Claude subscription — no API key).",7000);
+    });
+  }
+
   function boot(){
+    store.cfg.brain = store.cfg.brain || "local";
     Graph.init($("#stage"));
     Graph.load(store.memories, store.links);
     // one-time repair: memories saved before links were persisted → rebuild them
@@ -908,6 +945,7 @@ const App=(()=>{
     store.chat.slice(-8).forEach(m=>addMsg(m.role==="user"?"user":"assistant",m.content));
 
     // config → UI
+    $("#cfgBrain").value=store.cfg.brain||"local";
     $("#cfgKey").value=store.cfg.key||""; $("#cfgModel").value=store.cfg.model; $("#cfgBridge").value=store.cfg.bridge;
     $("#cfgSpeak").checked=!!store.cfg.speak;
 
@@ -928,7 +966,7 @@ const App=(()=>{
     $("#cfgClose").onclick=()=>scrim.classList.remove("open");
     scrim.onclick=e=>{ if(e.target===scrim) scrim.classList.remove("open"); };
     $("#cfgSave").onclick=()=>{
-      store.cfg.key=$("#cfgKey").value.trim(); store.cfg.model=$("#cfgModel").value;
+      store.cfg.brain=$("#cfgBrain").value; store.cfg.key=$("#cfgKey").value.trim(); store.cfg.model=$("#cfgModel").value;
       store.cfg.bridge=$("#cfgBridge").value.trim()||"http://localhost:8787";
       store.cfg.speak=$("#cfgSpeak").checked; store.cfg.voice=$("#cfgVoice").value;
       store.saveCfg(); scrim.classList.remove("open"); toast("Configuration saved.");
@@ -943,7 +981,7 @@ const App=(()=>{
     });
 
     setMode("talk"); setState("idle");
-    if(!store.cfg.key) setTimeout(()=>toast("Add your Anthropic API key in Settings ⚙ to enable Talk mode.",5200),900);
+    setTimeout(bootHint,900);
   }
 
   return { boot, setState, get state(){return state;}, handle, remember };

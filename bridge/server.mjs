@@ -55,18 +55,20 @@ function json(res, code, obj) {
   res.end(JSON.stringify(obj));
 }
 
-// Run one `claude -p ...` build. Resolves with the parsed JSON result.
-function runClaude(prompt, model) {
-  return new Promise((done) => {
-    const args = [
-      "-p", `ultrathink ${prompt}`,              // prepend ultrathink → max reasoning
-      "--model", model,
-      "--permission-mode", "acceptEdits",
-      "--output-format", "json",
-      "--allowedTools", ALLOWED_TOOLS,
-    ];
+// JARVIS's spoken persona for Talk mode (replaces the default coding system prompt).
+const TALK_SYSTEM =
+  "You are JARVIS, a witty, precise personal AI assistant in the spirit of Tony Stark's assistant. " +
+  "You are in a spoken voice conversation, so keep replies concise (1-4 sentences), natural and lightly urbane. " +
+  "Address the user as 'sir' occasionally but sparingly. Reply in plain spoken prose only — no markdown, " +
+  "lists, code, or emoji. Do not use any tools; simply answer from what you know.";
 
-    console.log(`\n\x1b[36m▸ claude\x1b[0m ${args.map(a => (a.includes(" ") ? `"${a}"` : a)).join(" ")}`);
+const summarize = (r = "") => r.split("\n").filter(Boolean).slice(-4).join(" ").slice(0, 600) || "Done.";
+
+// Low-level: run `claude` with an arbitrary argv, resolve the parsed result.
+function runClaudeArgs(args, label) {
+  return new Promise((done) => {
+    const shown = args.map(a => (a.includes(" ") ? `"${a.length > 64 ? a.slice(0, 61) + "…" : a}"` : a)).join(" ");
+    console.log(`\n\x1b[36m▸ ${label}\x1b[0m claude ${shown}`);
     console.log(`  \x1b[2mcwd: ${PROJECT_DIR}\x1b[0m`);
 
     let out = "", err = "";
@@ -83,7 +85,7 @@ function runClaude(prompt, model) {
     child.on("error", (e) => {
       clearTimeout(killer);
       done({ ok: false, spawnError: true, error: e.code === "ENOENT"
-        ? "`claude` CLI not found on PATH. Install Claude Code and log in first."
+        ? "`claude` CLI not found on PATH. Install Claude Code and log in with your Claude subscription first."
         : String(e.message) });
     });
 
@@ -93,11 +95,10 @@ function runClaude(prompt, model) {
       let parsed = null;
       try { parsed = JSON.parse(out); } catch { /* not json (e.g. an error) */ }
 
-      if (parsed) {
+      if (parsed && (parsed.result != null || parsed.text != null)) {
         const result = parsed.result || parsed.text || "";
-        const summary = result.split("\n").filter(Boolean).slice(-4).join(" ").slice(0, 600) || "Done.";
-        console.log(`  \x1b[32m✓ done\x1b[0m ${summary.slice(0, 120)}${summary.length > 120 ? "…" : ""}`);
-        done({ ok: true, summary, result, raw: parsed });
+        console.log(`  \x1b[32m✓ done\x1b[0m ${String(result).slice(0, 120)}${result.length > 120 ? "…" : ""}`);
+        done({ ok: true, result, raw: parsed });
       } else {
         const msg = (err || out || `exit ${code}`).trim().slice(0, 600);
         console.log(`  \x1b[31m✗ failed\x1b[0m ${msg.slice(0, 160)}`);
@@ -107,33 +108,72 @@ function runClaude(prompt, model) {
   });
 }
 
+// Build mode: let Claude Code edit files with maximum thinking.
+const buildArgs = (prompt, model) => ([
+  "-p", `ultrathink ${prompt}`,                 // prepend ultrathink → max reasoning
+  "--model", model,
+  "--permission-mode", "acceptEdits",
+  "--output-format", "json",
+  "--allowedTools", ALLOWED_TOOLS,
+]);
+
+// Talk mode: a plain spoken conversation — no file tools, no ultrathink.
+const talkArgs = (composed, model) => ([
+  "-p", composed,
+  "--model", model,
+  "--system-prompt", TALK_SYSTEM,
+  "--allowedTools", "",                         // no tools → pure conversation, never touches files
+  "--output-format", "json",
+]);
+
+// Run, and if the model string is rejected, retry with the "opus" alias.
+async function runWithFallback(makeArgs, model, label) {
+  let r = await runClaudeArgs(makeArgs(model), label);
+  if (!r.ok && !r.spawnError && /model|not.?found|invalid/i.test(r.error || "")) {
+    console.log("  \x1b[33m↻ retrying with --model opus\x1b[0m");
+    r = await runClaudeArgs(makeArgs("opus"), label);
+  }
+  return r;
+}
+
 const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") { res.writeHead(204, CORS); return res.end(); }
 
   if (req.method === "GET" && req.url === "/health") {
-    return json(res, 200, { ok: true, project: PROJECT_DIR, model: MODEL, tools: ALLOWED_TOOLS });
+    return json(res, 200, { ok: true, project: PROJECT_DIR, model: MODEL, tools: ALLOWED_TOOLS, endpoints: ["/talk", "/build"] });
   }
 
-  if (req.method === "POST" && req.url === "/build") {
+  const readBody = (cb) => {
     let raw = "";
     req.on("data", (c) => { raw += c; if (raw.length > 1e6) req.destroy(); });
-    req.on("end", async () => {
-      let prompt = "";
-      try { prompt = (JSON.parse(raw).prompt || "").trim(); } catch { return json(res, 400, { error: "Bad JSON body" }); }
-      if (!prompt) return json(res, 400, { error: "Missing 'prompt'." });
+    req.on("end", () => { let o; try { o = JSON.parse(raw || "{}"); } catch { return json(res, 400, { error: "Bad JSON body" }); } cb(o); });
+  };
 
-      // primary attempt with the full model string; fall back to the "opus" alias
-      let r = await runClaude(prompt, MODEL);
-      if (!r.ok && !r.spawnError && /model|not.?found|invalid/i.test(r.error || "")) {
-        console.log("  \x1b[33m↻ retrying with --model opus\x1b[0m");
-        r = await runClaude(prompt, "opus");
-      }
-      return json(res, r.ok ? 200 : 500, r);
+  // Talk mode — a spoken conversation powered by your Claude subscription (no API key).
+  if (req.method === "POST" && req.url === "/talk") {
+    return readBody(async (o) => {
+      const prompt = (o.prompt || "").trim();
+      if (!prompt) return json(res, 400, { error: "Missing 'prompt'." });
+      const model = o.model || MODEL;
+      const transcript = (o.history || []).slice(-12)
+        .map(m => `${m.role === "user" ? "User" : "JARVIS"}: ${m.content}`).join("\n");
+      const composed = (transcript ? transcript + "\n" : "") + "User: " + prompt + "\nJARVIS:";
+      const r = await runWithFallback((m) => talkArgs(composed, m), model, "talk");
+      return json(res, r.ok ? 200 : 500, r.ok ? { ok: true, reply: r.result } : r);
     });
-    return;
   }
 
-  json(res, 404, { error: "Not found. Use POST /build." });
+  // Build mode — Claude Code edits files in PROJECT_DIR.
+  if (req.method === "POST" && req.url === "/build") {
+    return readBody(async (o) => {
+      const prompt = (o.prompt || "").trim();
+      if (!prompt) return json(res, 400, { error: "Missing 'prompt'." });
+      const r = await runWithFallback((m) => buildArgs(prompt, m), MODEL, "build");
+      return json(res, r.ok ? 200 : 500, r.ok ? { ok: true, summary: summarize(r.result), result: r.result, raw: r.raw } : r);
+    });
+  }
+
+  json(res, 404, { error: "Not found. Use POST /talk or POST /build." });
 });
 
 server.listen(PORT, HOST, () => {
@@ -147,7 +187,9 @@ server.listen(PORT, HOST, () => {
 `);
   console.log(`  listening   http://${HOST}:${PORT}`);
   console.log(`  project     ${PROJECT_DIR}`);
-  console.log(`  model       ${MODEL}   tools: ${ALLOWED_TOOLS}`);
-  console.log(`  \x1b[2mPOST /build {"prompt":"…"}   ·   GET /health\x1b[0m`);
+  console.log(`  model       ${MODEL}   build tools: ${ALLOWED_TOOLS}`);
+  console.log(`  \x1b[2mPOST /talk  {"prompt":"…"}   → conversation (no file edits)\x1b[0m`);
+  console.log(`  \x1b[2mPOST /build {"prompt":"…"}   → Claude Code edits files\x1b[0m`);
+  console.log(`  \x1b[32m✓  uses your Claude subscription via the CLI — no API key needed.\x1b[0m`);
   console.log(`  \x1b[33m⚠  localhost only — never expose this to the internet.\x1b[0m\n`);
 });
