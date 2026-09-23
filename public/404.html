@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#04070c" />
+<title>Page not found | JARVIS by Joseph Leung</title>
+<meta name="robots" content="noindex" />
+<meta name="author" content="Joseph Leung" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+<style>
+  :root{--bg:#04070c;--cyan:#38e0ff;--cyan-rgb:56,224,255;--amber:#ffb54a;--ink:#cfe9f3;--ink-dim:#86a9b8;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;display:grid;place-items:center;padding:24px;background:var(--bg);color:var(--ink);font-family:var(--sans);text-align:center;
+    background-image:radial-gradient(ellipse at 50% 40%,rgba(10,40,60,.6),transparent 60%),radial-gradient(rgba(var(--cyan-rgb),.07) 1px,transparent 1px);
+    background-size:auto,46px 46px}
+  .orb{width:120px;height:120px;margin:0 auto 28px;border-radius:50%;border:1px dashed rgba(var(--cyan-rgb),.35);display:grid;place-items:center}
+  .orb::before{content:"";width:56px;height:56px;border-radius:50%;
+    background:radial-gradient(circle at 50% 40%,rgba(180,245,255,.9),rgba(var(--cyan-rgb),.5) 45%,rgba(10,40,60,.2) 75%);
+    box-shadow:0 0 40px rgba(var(--cyan-rgb),.35)}
+  p.code{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--ink-dim);margin:0 0 10px}
+  h1{font-size:clamp(26px,5vw,34px);margin:0 0 12px;color:#eafaff}
+  p{margin:0 0 26px;color:var(--ink-dim);line-height:1.6}
+  a.btn{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#eafaff;
+    border:1px solid rgba(var(--cyan-rgb),.45);border-radius:9px;padding:11px 16px;margin:0 4px 10px;
+    background:linear-gradient(180deg,rgba(var(--cyan-rgb),.14),rgba(var(--cyan-rgb),.03));transition:.16s}
+  a.btn:hover{border-color:var(--cyan);box-shadow:0 0 18px rgba(var(--cyan-rgb),.2)}
+  a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+  footer{margin-top:28px;font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+  footer a{color:var(--ink-dim)}
+</style>
+</head>
+<body>
+  <main>
+    <div class="orb" aria-hidden="true"></div>
+    <p class="code">ERROR 404</p>
+    <h1>No memory of that page, sir.</h1>
+    <p>The link may be old or mistyped.</p>
+    <a class="btn" href="/">Open JARVIS</a>
+    <a class="btn" href="/about">About JARVIS</a>
+    <footer>Built by <a href="https://josephleung-site.vercel.app/" rel="author">Joseph Leung</a></footer>
+  </main>
+</body>
+</html>

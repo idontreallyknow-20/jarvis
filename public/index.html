@@ -1,10 +1,90 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-CA">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="dark" />
-<title>JARVIS</title>
+<meta name="theme-color" content="#04070c" />
+<title>JARVIS | a holographic AI voice assistant by Joseph Leung</title>
+<meta name="description" content="JARVIS is a free, open-source AI voice assistant by Joseph Leung. Talk to Claude hands-free and watch every conversation grow into a glowing holographic memory graph." />
+<meta name="author" content="Joseph Leung" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://jarvis-joseph-leung.vercel.app/" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="author" href="https://josephleung-site.vercel.app/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="JARVIS by Joseph Leung" />
+<meta property="og:locale" content="en_CA" />
+<meta property="og:title" content="JARVIS | a holographic AI voice assistant by Joseph Leung" />
+<meta property="og:description" content="Talk to Claude hands-free and watch every conversation grow into a glowing holographic memory graph. Free and open source." />
+<meta property="og:url" content="https://jarvis-joseph-leung.vercel.app/" />
+<meta property="og:image" content="https://jarvis-joseph-leung.vercel.app/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="The JARVIS glowing orb and memory graph, with the caption: an AI voice assistant by Joseph Leung" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="JARVIS | a holographic AI voice assistant by Joseph Leung" />
+<meta name="twitter:description" content="Talk to Claude hands-free and watch every conversation grow into a glowing holographic memory graph." />
+<meta name="twitter:image" content="https://jarvis-joseph-leung.vercel.app/og-image.png" />
+<meta name="twitter:image:alt" content="The JARVIS glowing orb and memory graph, with the caption: an AI voice assistant by Joseph Leung" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://josephleung-site.vercel.app/#joseph",
+      "name": "Joseph Leung",
+      "alternateName": "Joseph Wah Sing Leung",
+      "url": "https://josephleung-site.vercel.app/",
+      "jobTitle": "Founder, Daily Brief HQ and NerfChess",
+      "homeLocation": { "@type": "Place", "name": "Richmond Hill, Ontario, Canada" },
+      "sameAs": [
+        "https://www.linkedin.com/in/joseph-leung-21b3473bb/",
+        "https://github.com/idontreallyknow-20",
+        "https://ratings.fide.com/profile/2636654",
+        "https://www.chess.ca/en/ratings/p/?id=167606",
+        "https://www.chess.com/member/squeakycrab",
+        "https://lichess.org/@/BigTrustedCrabby",
+        "https://lichess.org/@/UltraAddict2010",
+        "https://dailybriefhq.com",
+        "https://dailybriefhq.com/about",
+        "https://nerfchess.com"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://jarvis-joseph-leung.vercel.app/#website",
+      "url": "https://jarvis-joseph-leung.vercel.app/",
+      "name": "JARVIS",
+      "description": "A holographic AI voice assistant with a visual memory graph, built by Joseph Leung.",
+      "inLanguage": "en-CA",
+      "creator": { "@id": "https://josephleung-site.vercel.app/#joseph" },
+      "publisher": { "@id": "https://josephleung-site.vercel.app/#joseph" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://jarvis-joseph-leung.vercel.app/#app",
+      "name": "JARVIS",
+      "url": "https://jarvis-joseph-leung.vercel.app/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (web browser)",
+      "description": "A free, open-source AI voice assistant that talks through Claude and draws every conversation as a glowing holographic memory graph.",
+      "image": "https://jarvis-joseph-leung.vercel.app/og-image.png",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+      "codeRepository": "https://github.com/idontreallyknow-20/jarvis",
+      "creator": { "@id": "https://josephleung-site.vercel.app/#joseph" },
+      "author": { "@id": "https://josephleung-site.vercel.app/#joseph" }
+    }
+  ]
+}
+</script>
 <style>
   /* ============================================================
      JARVIS — holographic voice assistant UI
@@ -47,7 +127,7 @@
     display:flex;align-items:center;gap:14px;padding:14px 18px;
     font-family:var(--mono);
   }
-  .brand{display:flex;align-items:baseline;gap:10px;letter-spacing:.42em;font-weight:600}
+  .brand{display:flex;align-items:baseline;gap:10px;letter-spacing:.42em;font-weight:600;margin:0;font-size:inherit}
   .brand b{font-size:19px;color:#eafaff;text-shadow:0 0 14px rgba(var(--cyan-rgb),.55)}
   .brand small{font-size:9.5px;color:var(--ink-dim);letter-spacing:.3em}
   .grow{flex:1}
@@ -60,6 +140,7 @@
   body[data-state="listening"] .dot{background:var(--amber);box-shadow:0 0 12px var(--amber);animation-duration:.9s}
   body[data-state="thinking"] .dot{animation-duration:.5s}
   body[data-state="speaking"] .dot{background:#7bffcf;box-shadow:0 0 12px #7bffcf}
+  body[data-bridge="offline"][data-state="idle"] .dot{background:var(--danger);box-shadow:0 0 10px var(--danger);animation:none;opacity:.8}
   @keyframes breathe{0%,100%{opacity:.35}50%{opacity:1}}
 
   .iconbtn{
@@ -85,6 +166,7 @@
   .orb{
     --sz:min(46vmin,340px);width:var(--sz);height:var(--sz);border-radius:50%;
     display:grid;place-items:center;cursor:pointer;position:relative;isolation:isolate;
+    -webkit-appearance:none;appearance:none;border:0;padding:0;color:inherit;font:inherit;
     background:radial-gradient(circle at 50% 42%,rgba(var(--cyan-rgb),.20),rgba(var(--cyan-rgb),.05) 46%,transparent 62%);
   }
   .orb::before{ /* glass core */
@@ -148,7 +230,7 @@
   .composer input::placeholder{color:var(--ink-dim)}
   .mic{width:40px;height:40px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;
     border:1px solid var(--line);background:linear-gradient(180deg,rgba(var(--cyan-rgb),.1),transparent);
-    cursor:pointer;transition:.15s}
+    color:var(--ink);padding:0;cursor:pointer;transition:.15s}
   .mic:hover{border-color:rgba(var(--cyan-rgb),.5)}
   .mic.live{border-color:rgba(var(--amber-rgb),.7);background:rgba(var(--amber-rgb),.12);
     box-shadow:0 0 18px rgba(var(--amber-rgb),.3)}
@@ -158,22 +240,22 @@
   .presets{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
   .chip{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--ink-dim);
     border:1px solid var(--line-soft);background:rgba(var(--cyan-rgb),.03);
-    padding:5px 10px;border-radius:20px;cursor:pointer;transition:.15s;white-space:nowrap}
+    padding:6px 11px;border-radius:20px;cursor:pointer;transition:.15s;white-space:nowrap}
   .chip:hover{color:#dff4fb;border-color:rgba(var(--cyan-rgb),.4)}
   .chip b{color:rgba(var(--amber-rgb),.9);font-weight:600}
 
   /* ---- memory HUD (stats panel, shown in memory view) ---- */
   .memhud{position:fixed;left:18px;top:74px;z-index:3;width:230px;
-    font-family:var(--mono);opacity:0;transform:translateX(-14px);transition:.4s;pointer-events:none}
-  body.memoryview .memhud{opacity:1;transform:none;pointer-events:auto}
+    font-family:var(--mono);opacity:0;visibility:hidden;transform:translateX(-14px);transition:.4s;pointer-events:none}
+  body.memoryview .memhud{opacity:1;visibility:visible;transform:none;pointer-events:auto}
   .memhud .card{border:1px solid var(--line);border-radius:12px;background:var(--panel);
     backdrop-filter:blur(8px);padding:13px 14px;margin-bottom:10px}
   .memhud h4{margin:0 0 9px;font-size:9.5px;letter-spacing:.28em;color:var(--ink-dim);font-weight:600;text-transform:uppercase}
   .stat{display:flex;justify-content:space-between;font-size:12px;margin:5px 0;color:#cfeefb}
   .stat b{color:var(--cyan);font-weight:600}
   .topics{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
-  .tp{font-size:9.5px;padding:3px 7px;border-radius:12px;border:1px solid var(--line-soft);
-    color:var(--ink-dim);cursor:pointer;transition:.14s}
+  .tp{font-family:var(--mono);font-size:9.5px;padding:3px 7px;border-radius:12px;border:1px solid var(--line-soft);
+    background:transparent;color:var(--ink-dim);cursor:pointer;transition:.14s}
   .tp:hover,.tp.hot{color:#04121a;background:var(--cyan);border-color:var(--cyan)}
   .memsearch{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--line);color:var(--ink);
     font-family:var(--mono);font-size:12px;border-radius:9px;padding:8px 10px;outline:0}
@@ -194,7 +276,7 @@
   #memtip .meta{font-size:9px;color:var(--ink-dim);margin-top:5px}
 
   /* ---- modal (settings) ---- */
-  .scrim{position:fixed;inset:0;z-index:8;background:rgba(2,6,10,.72);backdrop-filter:blur(4px);
+  .scrim{position:fixed;inset:0;z-index:10;background:rgba(2,6,10,.72);backdrop-filter:blur(4px);
     display:none;align-items:center;justify-content:center;padding:20px}
   .scrim.open{display:flex}
   .modal{width:min(480px,94vw);max-height:90vh;overflow:auto;border:1px solid var(--line);
@@ -214,6 +296,7 @@
   .row .field{flex:1}
   .switch{display:flex;align-items:center;gap:10px;font-size:12.5px;color:#cfeefb;cursor:pointer}
   .switch input{width:auto}
+  .field .switch{display:flex;text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:12.5px;color:#cfeefb;margin-bottom:0}
   .modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
   .btn{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
     padding:10px 16px;border-radius:9px;cursor:pointer;border:1px solid var(--line);
@@ -221,10 +304,10 @@
   .btn.ghost{background:transparent;color:var(--ink-dim)}
   .btn:hover{border-color:rgba(var(--cyan-rgb),.6)}
 
-  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);z-index:9;
+  .toast{position:fixed;top:66px;left:50%;transform:translateX(-50%) translateY(-12px);z-index:9;
     font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:#eafaff;
     border:1px solid var(--line);background:rgba(6,16,24,.92);padding:10px 16px;border-radius:10px;
-    opacity:0;transition:.3s;pointer-events:none;max-width:88vw;text-align:center}
+    opacity:0;transition:.3s;pointer-events:none;width:max-content;max-width:min(560px,88vw);text-align:center;line-height:1.55}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
   .corner{position:fixed;width:26px;height:26px;border:1px solid var(--line);z-index:1;pointer-events:none;opacity:.6}
@@ -233,128 +316,191 @@
   .corner.bl{bottom:10px;left:10px;border-right:0;border-top:0}
   .corner.br{bottom:10px;right:10px;border-left:0;border-top:0}
 
+  /* ---- shared small bits ---- */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  :focus{outline:none}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .orb:focus-visible{outline-offset:6px}
+  .btn:focus-visible,.iconbtn:focus-visible,.chip:focus-visible,.mic:focus-visible{box-shadow:0 0 0 1px var(--amber)}
+  .field input:focus-visible,.field select:focus-visible,.memsearch:focus-visible{outline:0;border-color:rgba(var(--amber-rgb),.7)}
+  code{font-family:var(--mono);font-size:.92em;color:#eafaff;background:rgba(var(--cyan-rgb),.08);
+    border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
+  a{color:var(--cyan)}
+
+  /* ---- first-run welcome (empty transcript) ---- */
+  .welcome{border:1px solid var(--line);border-radius:13px;background:var(--panel);backdrop-filter:blur(8px);
+    padding:14px 16px;font-size:13px;line-height:1.6;color:#cfeefb}
+  .welcome h2{margin:0 0 4px;font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--ink-dim);font-weight:600}
+  .welcome p{margin:0}
+  .welcome p+p{margin-top:6px;color:var(--ink-dim);font-size:12px}
+
+  /* ---- credit line ---- */
+  .credit{text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--ink-dim);margin:0}
+  .credit a{color:var(--ink-dim);text-decoration:none;border-bottom:1px solid rgba(var(--cyan-rgb),.25);transition:.15s}
+  .credit a:hover{color:#eafaff;border-bottom-color:var(--cyan)}
+  .credit span{opacity:.5;margin:0 6px}
+
+  .btn:disabled{opacity:.5;cursor:default}
+  body[data-state="thinking"] #send{opacity:.55;cursor:progress}
+
   @media (max-width:560px){
+    .topbar{gap:8px;padding:12px 12px}
+    .brand{letter-spacing:.3em}
+    .brand b{font-size:16px}
     .brand small{display:none}
-    .memhud{display:none}
-    .transcript{max-height:22vh}
+    .iconbtn{padding:7px 9px;font-size:10px;letter-spacing:.12em}
+    .status #statusText{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+    .transcript{max-height:30vh}
+    .welcome{padding:11px 13px;font-size:12.5px;line-height:1.55}
+    .row{flex-direction:column;align-items:stretch;gap:0}
+    .modal{padding:18px}
+    .dock{margin-bottom:12px;gap:8px}
+    .composer input{font-size:16px} /* 16px stops iOS zooming on focus */
+    .corner{display:none}
+    /* memory view on phones: the HUD becomes a bottom sheet in place of the dock */
+    .memhud{left:12px;right:12px;top:auto;bottom:12px;width:auto;transform:translateY(14px)}
+    .memhud .card{margin-bottom:8px;padding:11px 12px}
+    .memhud .card:first-child{display:flex;gap:14px;justify-content:space-between}
+    .memhud .card:first-child h4{display:none}
+    .memhud .stat{margin:0;gap:6px}
+    .topics{max-height:64px;overflow:auto}
+    body.memoryview .dock{display:none}
+    body.memoryview .orb-wrap{transform:scale(.55) translateY(-18vh)}
+    .toast{top:58px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   }
 </style>
 </head>
 <body data-state="idle" data-mode="talk">
   <canvas id="stage" aria-hidden="true"></canvas>
-  <div class="corner tl"></div><div class="corner tr"></div>
-  <div class="corner bl"></div><div class="corner br"></div>
+  <div class="corner tl" aria-hidden="true"></div><div class="corner tr" aria-hidden="true"></div>
+  <div class="corner bl" aria-hidden="true"></div><div class="corner br" aria-hidden="true"></div>
 
   <div class="shell">
     <!-- top bar -->
-    <div class="topbar">
-      <div class="brand"><b>JARVIS</b><small>MK II · MEMORY CORE</small></div>
+    <header class="topbar">
+      <h1 class="brand"><b>JARVIS</b><small>MK II · MEMORY CORE</small></h1>
       <div class="grow"></div>
-      <div class="seg" role="tablist">
-        <button class="iconbtn on" id="mTalk">Talk</button>
-        <button class="iconbtn" id="mBuild">Build</button>
+      <div class="seg" role="group" aria-label="Mode">
+        <button type="button" class="iconbtn on" id="mTalk" aria-pressed="true" title="Talk: have a conversation">Talk</button>
+        <button type="button" class="iconbtn" id="mBuild" aria-pressed="false" title="Build: have Claude Code edit a project">Build</button>
       </div>
-      <button class="iconbtn" id="memToggle" title="Memory graph (M)">Memory</button>
-      <button class="iconbtn" id="settingsBtn" title="Settings">⚙</button>
-      <div class="status"><span class="dot"></span><span id="statusText">Online</span></div>
-    </div>
+      <button type="button" class="iconbtn" id="memToggle" aria-pressed="false" title="Memory graph (M)">Memory</button>
+      <button type="button" class="iconbtn" id="settingsBtn" title="Settings" aria-label="Settings" aria-haspopup="dialog">⚙</button>
+      <div class="status" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="statusText">Online</span></div>
+    </header>
 
     <!-- center orb -->
-    <div class="center">
+    <main class="center">
       <div class="orb-wrap">
-        <div class="orb" id="orb" title="Click or press Space to talk">
-          <span class="ring2"></span>
+        <button type="button" class="orb" id="orb" title="Click or press Space to talk">
+          <span class="ring2" aria-hidden="true"></span>
           <span class="cta" id="orbCta">TAP · SPACE<br>TO SPEAK</span>
-        </div>
+        </button>
       </div>
-    </div>
+    </main>
 
     <!-- dock -->
-    <div class="dock">
-      <div class="transcript" id="transcript"></div>
-      <div class="composer">
-        <input id="input" autocomplete="off" placeholder="Speak, or type a command…" />
-        <div class="mic" id="mic" title="Toggle listening (Space)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+    <section class="dock" aria-label="Conversation">
+      <div class="transcript" id="transcript" aria-live="polite">
+        <div class="welcome" id="welcome">
+          <h2>Welcome</h2>
+          <p>Talk to JARVIS and hear it answer. Every exchange becomes a glowing node in its memory graph, linked to related ideas. Press <b>M</b> to see it.</p>
+          <p>It runs on your Claude subscription through a small local bridge, no API key needed. <a href="/about#run">Set it up in two minutes</a>.</p>
+        </div>
+      </div>
+      <form class="composer" id="composer" autocomplete="off">
+        <label for="input" class="sr-only">Message JARVIS</label>
+        <input id="input" name="message" enterkeyhint="send" placeholder="Speak, or type a command…" />
+        <button type="button" class="mic" id="mic" aria-label="Toggle listening (Space)" title="Toggle listening (Space)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
             <rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><line x1="12" y1="17" x2="12" y2="21"/>
           </svg>
-        </div>
-        <button class="iconbtn send" id="send">Send</button>
-      </div>
+        </button>
+        <button type="submit" class="iconbtn send" id="send">Send</button>
+      </form>
       <div class="presets" id="presets"></div>
-    </div>
+      <p class="credit">Built by <a href="https://josephleung-site.vercel.app/" rel="author">Joseph Leung</a><span aria-hidden="true">·</span><a href="/about">About</a><span aria-hidden="true">·</span><a href="https://github.com/idontreallyknow-20/jarvis" rel="noopener">Source</a></p>
+    </section>
   </div>
 
   <!-- memory stats HUD -->
-  <div class="memhud">
+  <aside class="memhud" id="memhud" aria-label="Memory core">
     <div class="card">
       <h4>Memory Core</h4>
       <div class="stat"><span>Memories</span><b id="stNodes">0</b></div>
       <div class="stat"><span>Connections</span><b id="stLinks">0</b></div>
-      <div class="stat"><span>Density</span><b id="stDensity">0.0</b></div>
+      <div class="stat"><span>Density</span><b id="stDensity">0.0%</b></div>
     </div>
     <div class="card">
       <h4>Recall</h4>
-      <input class="memsearch" id="memSearch" placeholder="search memory…" />
-      <button class="tinybtn" id="wipeMem">Purge memory core</button>
+      <label for="memSearch" class="sr-only">Search memory</label>
+      <input class="memsearch" id="memSearch" type="search" placeholder="search memory…" />
+      <button type="button" class="tinybtn" id="wipeMem">Purge memory core</button>
     </div>
     <div class="card">
       <h4>Active Threads</h4>
       <div class="topics" id="topicCloud"></div>
     </div>
-  </div>
+  </aside>
 
   <!-- node tooltip -->
-  <div id="memtip"><div class="box"><div class="who" id="tipWho"></div><div class="txt" id="tipTxt"></div><div class="meta" id="tipMeta"></div></div></div>
+  <div id="memtip" aria-hidden="true"><div class="box"><div class="who" id="tipWho"></div><div class="txt" id="tipTxt"></div><div class="meta" id="tipMeta"></div></div></div>
 
   <!-- settings -->
   <div class="scrim" id="scrim">
-    <div class="modal">
-      <h3>JARVIS · Configuration</h3>
+    <form class="modal" id="cfgForm" role="dialog" aria-modal="true" aria-labelledby="cfgTitle" autocomplete="off">
+      <h3 id="cfgTitle">JARVIS · Configuration</h3>
       <p class="sub">Settings live only in this browser. Nothing is sent anywhere except the requests you make.</p>
 
       <div class="field">
-        <label>Talk brain</label>
+        <label for="cfgBrain">Talk brain</label>
         <select id="cfgBrain">
-          <option value="local">Local Claude · your Pro/Max login — no API key</option>
+          <option value="local">Local Claude (no API key)</option>
           <option value="api">Anthropic API key</option>
         </select>
-        <div class="hint">“Local Claude” runs through the bridge (start it with <b>node bridge/server.mjs</b>) using your Claude subscription — no key, no per-token billing. Choose “Anthropic API key” only if you have a console.anthropic.com key.</div>
+        <div class="hint">“Local Claude” runs through the bridge (start it with <code>node bridge/server.mjs</code>) using your Claude subscription: no key, no per-token billing. Pick “Anthropic API key” only if you have a console.anthropic.com key.</div>
       </div>
 
       <div class="field">
-        <label>Anthropic API key <span style="color:var(--ink-dim)">(optional)</span></label>
-        <input id="cfgKey" type="password" placeholder="sk-ant-…  (only for the API-key brain)" />
-        <div class="hint warn">Only needed if Talk brain = Anthropic API key. Stored in this browser's localStorage; anyone with access to it can read it. Use a scoped key.</div>
+        <label for="cfgKey">Anthropic API key <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input id="cfgKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…  (only for the API-key brain)" />
+        <div class="hint warn">Only needed if Talk brain is “Anthropic API key”. It's stored in this browser's localStorage, so anyone with access to this browser can read it. Use a scoped key.</div>
       </div>
 
       <div class="row">
         <div class="field">
-          <label>Model</label>
+          <label for="cfgModel">Model</label>
           <select id="cfgModel">
-            <option value="claude-opus-4-8">claude-opus-4-8</option>
+            <option value="claude-opus-5">claude-opus-5</option>
             <option value="claude-sonnet-5">claude-sonnet-5</option>
             <option value="claude-haiku-4-5">claude-haiku-4-5</option>
+            <option value="claude-opus-4-8">claude-opus-4-8</option>
           </select>
         </div>
         <div class="field">
-          <label>Bridge URL (Build)</label>
-          <input id="cfgBridge" placeholder="http://localhost:8787" />
+          <label for="cfgBridge">Bridge URL</label>
+          <input id="cfgBridge" type="url" spellcheck="false" placeholder="http://localhost:8787" />
         </div>
       </div>
 
       <div class="field">
-        <label>Voice</label>
+        <label for="cfgVoice">Voice</label>
         <select id="cfgVoice"><option value="">System default</option></select>
         <label class="switch" style="margin-top:10px"><input type="checkbox" id="cfgSpeak" checked/> Read replies aloud</label>
       </div>
 
       <div class="actions">
-        <button class="btn ghost" id="cfgClose">Close</button>
-        <button class="btn" id="cfgSave">Save</button>
+        <button type="button" class="btn ghost" id="cfgClose">Close</button>
+        <button type="submit" class="btn" id="cfgSave">Save</button>
       </div>
-    </div>
+    </form>
   </div>
+
+  <noscript><p style="position:fixed;inset:auto 0 40%;text-align:center;color:#bfe9f7;font-family:system-ui">JARVIS needs JavaScript to run. <a href="/about" style="color:#38e0ff">Read what it is</a>.</p></noscript>
 
   <div class="toast" id="toast"></div>
 
@@ -374,8 +520,9 @@ const LS = {
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch{} }
 };
 
+const DEFAULT_BRIDGE = "http://localhost:8787";
 const store = {
-  cfg: LS.get("jarvis.cfg",{ key:"", brain:"local", model:"claude-opus-4-8", bridge:"http://localhost:8787", speak:true, voice:"" }),
+  cfg: { key:"", brain:"local", model:"claude-opus-5", bridge:DEFAULT_BRIDGE, speak:true, voice:"", bridgeSeen:false, ...LS.get("jarvis.cfg",{}) },
   memories: LS.get("jarvis.memories",[]),   // {id,text,role,topics[],ts}
   links: LS.get("jarvis.links",[]),         // {a,b,strength}
   chat: LS.get("jarvis.chat",[]),           // {role:'user'|'assistant', content}
@@ -420,7 +567,7 @@ function extractTopics(text, max=5){
         Graph.stats()             -> {nodes,links,density,topics[]}
    ================================================================ */
 const Graph = (()=>{
-  let cv, ctx, W=0, H=0, cx=0, cy=0, dpr=1, glowCyan, glowAmber;
+  let cv, ctx, W=0, H=0, cx=0, cy=0, dpr=1, glowCyan, glowAmber, bgLayer=null, orbEl=null;
   const nodes=[];               // {id, memId, x,y,vx,vy, r, role, topics, text, ts, born, heat, deg}
   const links=[];               // {a,b, strength, born, pulse}  pulse:-1 idle else 0..1 travelling
   const byId=new Map();
@@ -444,12 +591,12 @@ const Graph = (()=>{
   }
 
   function init(canvas){
-    cv=canvas; ctx=cv.getContext("2d");
+    cv=canvas; ctx=cv.getContext("2d"); orbEl=document.getElementById("orb");
     glowCyan=makeGlow(CY); glowAmber=makeGlow(AM);
     resize(); window.addEventListener("resize",resize,{passive:true});
     cv.addEventListener("pointermove",e=>{ mouseX=e.clientX; mouseY=e.clientY; },{passive:true});
     cv.addEventListener("pointerleave",()=>{ mouseX=mouseY=-1; },{passive:true});
-    cv.addEventListener("pointerdown",onClick);
+    cv.addEventListener("pointerdown",e=>{ mouseX=e.clientX; mouseY=e.clientY; hoverNode=pickHover(); onClick(); });
     requestAnimationFrame(loop);
   }
   function resize(){
@@ -458,7 +605,17 @@ const Graph = (()=>{
     cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
     cv.style.width=W+"px"; cv.style.height=H+"px";
     ctx.setTransform(dpr,0,0,dpr,0,0);
-    cx=W/2; cy=H/2;
+    cx=W/2; cy=H/2; followOrb(1);
+    bgLayer=null;
+  }
+  function paintBgLayer(){
+    const c=document.createElement("canvas"); c.width=cv.width; c.height=cv.height;
+    const g=c.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
+    g.fillStyle="#04070c"; g.fillRect(0,0,W,H);
+    const rg=g.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*0.7);
+    rg.addColorStop(0,"rgba(10,26,40,.55)"); rg.addColorStop(.5,"rgba(6,14,22,.25)"); rg.addColorStop(1,"rgba(2,4,8,0)");
+    g.fillStyle=rg; g.fillRect(0,0,W,H);
+    return c;
   }
 
   function load(mems,lnks){
@@ -576,18 +733,16 @@ const Graph = (()=>{
   }
 
   function drawBackground(){
-    ctx.fillStyle="#04070c"; ctx.fillRect(0,0,W,H);
-    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*0.7);
-    g.addColorStop(0,"rgba(10,26,40,.55)"); g.addColorStop(.5,"rgba(6,14,22,.25)"); g.addColorStop(1,"rgba(2,4,8,0)");
-    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    if(!bgLayer) bgLayer=paintBgLayer();
+    ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.drawImage(bgLayer,0,0); ctx.restore();
     // drifting dot grid
     ctx.save(); ctx.globalAlpha=0.5*exposure+0.12; ctx.fillStyle=`rgba(${CY},.05)`;
     const gap=46, off=(tick*0.15)%gap;
-    for(let x=-off;x<W;x+=gap)for(let y=-off;y<H;y+=gap){ ctx.fillRect(x,y,1.4,1.4); }
+    ctx.beginPath(); for(let x=-off;x<W;x+=gap)for(let y=-off;y<H;y+=gap){ ctx.rect(x,y,1.4,1.4); } ctx.fill();
     ctx.restore();
     // faint scanlines
     ctx.save(); ctx.globalAlpha=0.05*exposure; ctx.strokeStyle=`rgba(${CY},1)`; ctx.lineWidth=1;
-    for(let y=(tick*0.4)%4;y<H;y+=4){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    ctx.beginPath(); for(let y=(tick*0.4)%4;y<H;y+=4){ ctx.moveTo(0,y); ctx.lineTo(W,y); } ctx.stroke();
     ctx.restore();
   }
 
@@ -667,8 +822,13 @@ const Graph = (()=>{
       ctx.globalAlpha=(0.10+ (i===1?0.06:0))*(0.6+exposure*0.4)*pulse;
       ctx.strokeStyle=`rgba(${col},1)`; ctx.lineWidth=i===1?1.4:0.8;
       ctx.beginPath();
-      for(let s=0;s<Math.PI*2;s+=0.12){ const gap=(Math.floor((s+a)/(Math.PI/6))%2===0); if(!gap)continue;
-        const x=Math.cos(s)*r, y=Math.sin(s)*r; s===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+      let pen=false; // dashed ring: lift the pen across each gap so segments aren't joined by chords
+      for(let s=0;s<=Math.PI*2+0.001;s+=0.06){
+        const on=(((Math.floor((s+a)/(Math.PI/6))%2)+2)%2===0);
+        if(!on){ pen=false; continue; }
+        const x=Math.cos(s)*r, y=Math.sin(s)*r;
+        if(pen) ctx.lineTo(x,y); else { ctx.moveTo(x,y); pen=true; }
+      }
       ctx.stroke();
     }
     ctx.restore();
@@ -688,8 +848,15 @@ const Graph = (()=>{
     ctx.restore();
   }
 
+  // the graph orbits the DOM orb, which sits between the top bar and the dock (not at
+  // the exact window centre) and moves in memory view, so ease the centre toward it
+  function followOrb(k){
+    const r=orbEl&&orbEl.getBoundingClientRect(); if(!r||!r.width) return;
+    cx+=(r.left+r.width/2-cx)*k; cy+=(r.top+r.height/2-cy)*k;
+  }
   function loop(){
     tick++;
+    followOrb(0.15);
     exposure += (targetExp-exposure)*0.08;
     physics();
     hoverNode=pickHover();
@@ -725,14 +892,20 @@ const Voice=(()=>{
   let rec=null, listening=false, onFinal=null;
   if(SR){ rec=new SR(); rec.continuous=false; rec.interimResults=true; rec.lang="en-US"; }
   function start(cb){
-    if(!rec){ toast("Speech recognition unavailable — type instead."); return false; }
+    if(!rec){ toast("Voice input isn't supported in this browser. Type instead."); return false; }
     onFinal=cb; try{ rec.start(); }catch{}; return true;
   }
   function stop(){ if(rec) try{ rec.stop(); }catch{} }
   if(rec){
     rec.onstart=()=>{ listening=true; App.setState("listening"); };
     rec.onend=()=>{ listening=false; if(App.state==="listening") App.setState("idle"); };
-    rec.onerror=(e)=>{ listening=false; if(e.error!=="no-speech") toast("Mic: "+e.error); };
+    rec.onerror=(e)=>{
+      listening=false;
+      if(e.error==="no-speech"||e.error==="aborted") return;
+      toast(e.error==="not-allowed"||e.error==="service-not-allowed"
+        ? "Microphone access is blocked. Allow it in your browser, or type instead."
+        : "Mic error: "+e.error, 4200);
+    };
     rec.onresult=(e)=>{
       let interim="",final="";
       for(let i=e.resultIndex;i<e.results.length;i++){ const r=e.results[i]; if(r.isFinal) final+=r[0].transcript; else interim+=r[0].transcript; }
@@ -743,7 +916,7 @@ const Voice=(()=>{
   let voices=[];
   function loadVoices(){ voices=speechSynthesis.getVoices()||[];
     const sel=$("#cfgVoice"); const cur=store.cfg.voice;
-    sel.innerHTML='<option value="">System default</option>'+voices.map(v=>`<option value="${v.name}">${v.name} — ${v.lang}</option>`).join("");
+    sel.replaceChildren(new Option("System default",""), ...voices.map(v=>new Option(`${v.name} (${v.lang})`, v.name)));
     sel.value=cur||"";
   }
   if("speechSynthesis" in window){ speechSynthesis.onvoiceschanged=loadVoices; loadVoices(); }
@@ -752,13 +925,16 @@ const Voice=(()=>{
     if(store.cfg.voice){ const v=voices.find(x=>x.name===store.cfg.voice); if(v)return v; }
     return voices.find(v=>/daniel|arthur|george|male.*en-GB/i.test(v.name)) || voices.find(v=>/en-GB/i.test(v.lang)) || voices[0];
   }
+  // returns true if speech was queued (the utterance then drives the state back to idle)
   function speak(text){
-    if(!store.cfg.speak||!("speechSynthesis" in window)||!text) return;
+    if(!store.cfg.speak||!("speechSynthesis" in window)||!text) return false;
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
     const v=pickVoice(); if(v)u.voice=v; u.rate=1.02; u.pitch=0.95;
-    u.onstart=()=>App.setState("speaking"); u.onend=()=>{ if(App.state==="speaking")App.setState("idle"); };
+    const done=()=>{ if(App.state==="speaking"||App.state==="thinking") App.setState("idle"); };
+    u.onstart=()=>App.setState("speaking"); u.onend=done; u.onerror=done;
     speechSynthesis.speak(u);
+    return true;
   }
   function shutUp(){ if("speechSynthesis" in window) speechSynthesis.cancel(); }
   return { start, stop, speak, shutUp, get listening(){return listening;}, get supported(){return !!rec;} };
@@ -770,7 +946,8 @@ const Voice=(()=>{
               or Anthropic API      (only if you have a console key)
       Build → local bridge /build  (Claude Code edits files)
    ================================================================ */
-const bridgeBase=()=>(store.cfg.bridge||"http://localhost:8787").replace(/\/+$/,"");
+const bridgeBase=()=>(store.cfg.bridge||DEFAULT_BRIDGE).replace(/\/+$/,"");
+const OFFLINE_HELP="JARVIS's brain is offline. In a terminal, run  node bridge/server.mjs  (it uses your Claude subscription, no API key). Setup guide: /about#run";
 
 // Talk through YOUR subscription — the bridge runs the `claude` CLI (no API key).
 async function askBridgeTalk(userText, history){
@@ -778,17 +955,20 @@ async function askBridgeTalk(userText, history){
   try{
     res=await fetch(bridgeBase()+"/talk",{ method:"POST", headers:{"content-type":"application/json"},
       body:JSON.stringify({ prompt:userText, history, model:store.cfg.model }) });
-  }catch(e){ throw new Error("JARVIS's brain is offline. In a terminal, run:  node bridge/server.mjs  — it uses your Claude subscription, no API key."); }
+  }catch(e){ document.body.dataset.bridge="offline"; throw new Error(OFFLINE_HELP); }
   if(!res.ok){ let d=""; try{ d=(await res.json()).error||""; }catch{} throw new Error(`Bridge ${res.status}: ${d||res.statusText}`); }
+  store.cfg.bridgeSeen=true; store.saveCfg();
   return (await res.json()).reply || "…";
 }
 
 // Talk through a console.anthropic.com API key (optional alternative).
 async function askClaude(userText, history){
   const cfg=store.cfg;
-  if(!cfg.key){ throw new Error("No API key saved. Open Settings ⚙ and either add a key, or switch the Talk brain to Local Claude (no key)."); }
+  if(!cfg.key){ throw new Error("No API key saved. Open Settings ⚙ and add one, or switch the Talk brain to Local Claude (no key)."); }
   const body={
-    model:cfg.model, max_tokens:400,
+    model:cfg.model, max_tokens:1024,
+    // spoken small talk: keep thinking light (Haiku 4.5 doesn't take the effort setting)
+    ...(/haiku/.test(cfg.model)?{}:{ output_config:{ effort:"low" } }),
     system:"You are JARVIS, a witty, precise personal AI assistant in the spirit of Tony Stark's assistant. Replies are spoken aloud, so be concise (1–4 sentences), natural, and lightly urbane. Address the user as 'sir' occasionally but sparingly. No markdown, lists, or emoji — just spoken prose.",
     messages:[...history.map(m=>({role:m.role,content:m.content})),{role:"user",content:userText}]
   };
@@ -799,7 +979,8 @@ async function askClaude(userText, history){
   });
   if(!res.ok){ let d=""; try{ d=(await res.json()).error?.message||""; }catch{} throw new Error(`Anthropic ${res.status}: ${d||res.statusText}`); }
   const data=await res.json();
-  return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join(" ").trim();
+  if(data.stop_reason==="refusal") throw new Error("Claude declined to answer that one. Try rephrasing.");
+  return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join(" ").trim() || "…";
 }
 
 // Build through the local bridge → Claude Code edits files.
@@ -807,8 +988,9 @@ async function askBridge(prompt){
   let res;
   try{
     res=await fetch(bridgeBase()+"/build",{ method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify({prompt}) });
-  }catch(e){ throw new Error("Bridge offline. Run:  node bridge/server.mjs"); }
+  }catch(e){ document.body.dataset.bridge="offline"; throw new Error(OFFLINE_HELP); }
   if(!res.ok){ let d=""; try{ d=(await res.json()).error||""; }catch{} throw new Error(`Bridge ${res.status}: ${d||res.statusText}`); }
+  store.cfg.bridgeSeen=true; store.saveCfg();
   const data=await res.json();
   return data.summary || data.result || "Done.";
 }
@@ -819,15 +1001,19 @@ async function askBridge(prompt){
 const App=(()=>{
   let state="idle";
   const transcriptEl=$("#transcript");
+  const isLocalPage=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 
   function setState(s){ state=s; document.body.dataset.state=s; Graph.setState(s);
-    $("#statusText").textContent = s==="listening"?"Listening":s==="thinking"?"Thinking":s==="speaking"?"Speaking":(document.body.dataset.mode==="build"?"Build mode":"Online");
+    $("#statusText").textContent = s==="listening"?"Listening":s==="thinking"?"Thinking":s==="speaking"?"Speaking":document.body.dataset.bridge==="offline"&&store.cfg.brain!=="api"?"Bridge offline":(document.body.dataset.mode==="build"?"Build mode":"Online");
     $("#mic").classList.toggle("live",s==="listening");
+    $("#send").disabled = s==="thinking";
   }
 
   function addMsg(role,text,cls=""){
+    $("#welcome")?.remove();
     const d=document.createElement("div"); d.className="msg "+(role==="user"?"user":"jarvis")+(cls?" "+cls:"");
-    d.innerHTML=`<span class="who">${role==="user"?"You":"JARVIS"}</span>`; d.appendChild(document.createTextNode(text));
+    const who=document.createElement("span"); who.className="who"; who.textContent=role==="user"?"You":"JARVIS";
+    d.append(who, document.createTextNode(text));
     transcriptEl.appendChild(d); transcriptEl.scrollTop=transcriptEl.scrollHeight;
     return d;
   }
@@ -837,19 +1023,16 @@ const App=(()=>{
     const mem={ id:uid(), text, role, topics:extractTopics(text), ts:now() };
     store.memories.push(mem);
     Graph.addMemory(mem);
-    // capture the freshly created links back into the store so they persist
-    persistFromGraph();
-    refreshHud();
-  }
-  function persistFromGraph(){
-    // Graph owns link topology after addMemory — mirror it back so the
-    // connecting lines survive a reload (this is the whole point).
+    // Graph owns link topology after addMemory; mirror it back so the
+    // connecting lines survive a reload.
     store.links = Graph.exportLinks();
     store.saveMem();
+    refreshHud();
   }
 
   async function handle(text){
     text=(text||"").trim(); if(!text) return;
+    if(state==="thinking"){ toast("Still working on the last one…"); return; }
     Voice.shutUp();
     const priorChat=store.chat.slice(-12);           // history BEFORE this turn
     addMsg("user",text);
@@ -861,14 +1044,16 @@ const App=(()=>{
       if(document.body.dataset.mode==="build")  reply=await askBridge(text);
       else if(store.cfg.brain==="api")          reply=await askClaude(text, priorChat);
       else                                      reply=await askBridgeTalk(text, priorChat);
+      if(document.body.dataset.mode==="build"||store.cfg.brain!=="api") delete document.body.dataset.bridge;
       addMsg("assistant",reply);
       store.chat.push({role:"assistant",content:reply}); store.saveChat();
       remember(reply,"jarvis");
-      Voice.speak(reply);
-      if(!store.cfg.speak) setState("idle");
+      if(!Voice.speak(reply)) setState("idle");
     }catch(err){
-      addMsg("assistant",String(err.message||err),"err");
-      toast(String(err.message||err),4200);
+      store.chat.pop();                              // keep history strictly user/assistant pairs
+      const msg=String(err.message||err);
+      addMsg("assistant",msg,"err");
+      toast(msg,5200);
       setState("idle");
     }
   }
@@ -878,8 +1063,9 @@ const App=(()=>{
     $("#stNodes").textContent=s.nodes;
     $("#stLinks").textContent=s.links;
     $("#stDensity").textContent=(s.density*100).toFixed(1)+"%";
-    const cloud=$("#topicCloud"); cloud.innerHTML="";
-    s.topics.forEach(t=>{ const el=document.createElement("span"); el.className="tp"; el.textContent=t;
+    const cloud=$("#topicCloud"); cloud.replaceChildren();
+    if(!s.topics.length){ const e=document.createElement("span"); e.className="stat"; e.textContent="Nothing yet. Say something."; cloud.appendChild(e); }
+    s.topics.forEach(t=>{ const el=document.createElement("button"); el.type="button"; el.className="tp"; el.textContent=t;
       el.onclick=()=>{ $("#memSearch").value=t; Graph.highlight(t); paintTopicHot(t); }; cloud.appendChild(el); });
   }
   function paintTopicHot(t){ $$("#topicCloud .tp").forEach(e=>e.classList.toggle("hot",e.textContent===t)); }
@@ -888,14 +1074,14 @@ const App=(()=>{
     const on = force!=null?force : !document.body.classList.contains("memoryview");
     document.body.classList.toggle("memoryview",on);
     $("#memToggle").classList.toggle("on",on);
+    $("#memToggle").setAttribute("aria-pressed",on);
     Graph.setExposure(on?1:0.5);
     if(on) refreshHud();
   }
 
   function setMode(mode){
     document.body.dataset.mode=mode;
-    $("#mTalk").classList.toggle("on",mode==="talk");
-    $("#mBuild").classList.toggle("on",mode==="build");
+    for(const [id,m] of [["#mTalk","talk"],["#mBuild","build"]]){ $(id).classList.toggle("on",mode===m); $(id).setAttribute("aria-pressed",mode===m); }
     $("#orbCta").innerHTML = mode==="build" ? "TAP · SPACE<br>TO COMMAND" : "TAP · SPACE<br>TO SPEAK";
     $("#input").placeholder = mode==="build" ? "Describe a change for Claude Code to make…" : "Speak, or type a command…";
     renderPresets();
@@ -905,35 +1091,69 @@ const App=(()=>{
   function renderPresets(){
     const talk=[["Status report","Give me a brief status report."],["What's on my mind?","Summarise what we've talked about recently."],["Wind down","Any loose ends I should remember for later?"]];
     const build=[["+ Subscribe section","Add a clean email subscribe section to the Daily Brief HQ homepage with a heading, one-line pitch, email input, and subscribe button. Keep the existing styling."],["Draft this week's issue","Generate a draft of this week's Daily Brief HQ newsletter issue as a new markdown file with 3 short curated items and intro."],["Dark mode toggle","Add a dark mode toggle to the Daily Brief HQ site that persists in localStorage."]];
-    const list=document.body.dataset.mode==="build"?build:talk;
-    const box=$("#presets"); box.innerHTML="";
-    list.forEach(([label,cmd])=>{ const c=document.createElement("span"); c.className="chip";
-      c.innerHTML=(document.body.dataset.mode==="build"?"<b>▸</b> ":"")+label; c.title=cmd;
-      c.onclick=()=>{ $("#input").value=cmd; handle(cmd); }; box.appendChild(c); });
+    const isBuild=document.body.dataset.mode==="build";
+    const box=$("#presets"); box.replaceChildren();
+    (isBuild?build:talk).forEach(([label,cmd])=>{ const c=document.createElement("button"); c.type="button"; c.className="chip";
+      if(isBuild){ const b=document.createElement("b"); b.textContent="▸ "; c.appendChild(b); }
+      c.appendChild(document.createTextNode(label)); c.title=cmd;
+      c.onclick=()=>handle(cmd); box.appendChild(c); });
   }
 
   function toggleListen(){
-    if(!Voice.supported){ $("#input").focus(); return; }
+    if(!Voice.supported){ toast("Voice input isn't supported in this browser. Type instead (Chrome and Edge support it)."); $("#input").focus(); return; }
     if(Voice.listening){ Voice.stop(); }
-    else { Voice.start(t=>{ Voice.stop(); handle(t); }); }
+    else { Voice.start(t=>{ Voice.stop(); $("#input").value=""; handle(t); }); }
   }
 
-  // first-run guidance: check whether JARVIS's brain (the bridge) is reachable
+  // Check whether JARVIS's brain (the bridge) is reachable. On the hosted site we only
+  // probe localhost once the bridge has worked before, so first-time visitors don't get
+  // a "wants to access your local network" browser prompt just for opening the page.
   function bootHint(){
     if(store.cfg.brain==="api"){
-      if(!store.cfg.key) toast("Talk brain is set to API key but none is saved — add one in Settings ⚙, or switch to Local Claude (no key).",6500);
+      if(!store.cfg.key) toast("Talk brain is set to API key but none is saved. Add one in Settings ⚙, or switch to Local Claude (no key).",6500);
       return;
     }
+    if(!isLocalPage && !store.cfg.bridgeSeen) return;
     fetch(bridgeBase()+"/health").then(r=>r.ok?r.json():Promise.reject()).then(()=>{
-      $("#statusText").textContent = document.body.dataset.mode==="build"?"Build mode":"Online";
-      toast("Connected to your local Claude — Talk mode ready, no API key needed.",4200);
+      store.cfg.bridgeSeen=true; store.saveCfg(); delete document.body.dataset.bridge;
+      toast("Connected to your local Claude. Talk mode is ready.",3600);
     }).catch(()=>{
-      toast("To talk, start JARVIS's brain in a terminal:  node bridge/server.mjs   (uses your Claude subscription — no API key).",7000);
+      document.body.dataset.bridge="offline"; $("#statusText").textContent="Bridge offline";
+      toast("To talk, start JARVIS's brain in a terminal:  node bridge/server.mjs",6500);
     });
   }
 
+  function purgeMemory(){
+    if(!confirm("Purge the entire memory core and conversation history? This can't be undone.")) return;
+    store.memories=[]; store.links=[]; store.chat=[]; store.saveMem(); store.saveChat();
+    Graph.load([],[]); Graph.highlight(""); $("#memSearch").value="";
+    $$("#transcript .msg").forEach(e=>e.remove());
+    refreshHud(); toast("Memory core purged.");
+  }
+
+  // settings dialog: focus moves in on open and back to the gear on close
+  const scrim=$("#scrim");
+  const settingsOpen=()=>scrim.classList.contains("open");
+  function openSettings(){
+    $("#cfgBrain").value=store.cfg.brain||"local";
+    $("#cfgKey").value=store.cfg.key||""; $("#cfgModel").value=store.cfg.model; $("#cfgBridge").value=store.cfg.bridge;
+    $("#cfgSpeak").checked=!!store.cfg.speak; $("#cfgVoice").value=store.cfg.voice||"";
+    if(!$("#cfgModel").value) $("#cfgModel").value="claude-opus-5";
+    scrim.classList.add("open"); $("#cfgBrain").focus();
+  }
+  function closeSettings(){ scrim.classList.remove("open"); $("#settingsBtn").focus(); }
+  function saveSettings(e){
+    e.preventDefault();
+    const bridge=$("#cfgBridge").value.trim()||DEFAULT_BRIDGE;
+    if(!/^https?:\/\/[^\s/]+/i.test(bridge)){ toast("Bridge URL should look like http://localhost:8787"); $("#cfgBridge").focus(); return; }
+    const brain=$("#cfgBrain").value, key=$("#cfgKey").value.trim();
+    if(brain==="api" && key && !/^sk-ant-/.test(key)) toast("That doesn't look like an Anthropic key (they start with sk-ant-). Saved anyway.",4200);
+    Object.assign(store.cfg,{ brain, key, model:$("#cfgModel").value, bridge, speak:$("#cfgSpeak").checked, voice:$("#cfgVoice").value });
+    if(!store.cfg.speak) Voice.shutUp();
+    store.saveCfg(); closeSettings(); toast("Configuration saved.");
+  }
+
   function boot(){
-    store.cfg.brain = store.cfg.brain || "local";
     Graph.init($("#stage"));
     Graph.load(store.memories, store.links);
     // one-time repair: memories saved before links were persisted → rebuild them
@@ -941,43 +1161,38 @@ const App=(()=>{
       Graph.relinkAll(); store.links=Graph.exportLinks(); store.saveMem();
     }
     refreshHud();
-    // restore transcript (last few)
+    // restore the last few lines of the transcript
     store.chat.slice(-8).forEach(m=>addMsg(m.role==="user"?"user":"assistant",m.content));
-
-    // config → UI
-    $("#cfgBrain").value=store.cfg.brain||"local";
-    $("#cfgKey").value=store.cfg.key||""; $("#cfgModel").value=store.cfg.model; $("#cfgBridge").value=store.cfg.bridge;
-    $("#cfgSpeak").checked=!!store.cfg.speak;
 
     // events
     $("#orb").onclick=toggleListen;
     $("#mic").onclick=toggleListen;
-    $("#send").onclick=()=>{ const v=$("#input").value.trim(); if(v){ $("#input").value=""; handle(v); } };
-    $("#input").addEventListener("keydown",e=>{ if(e.key==="Enter"){ const v=$("#input").value.trim(); if(v){ $("#input").value=""; handle(v);} } });
+    $("#composer").addEventListener("submit",e=>{ e.preventDefault(); const v=$("#input").value.trim(); if(v && state!=="thinking"){ $("#input").value=""; } handle(v); });
     $("#mTalk").onclick=()=>setMode("talk");
     $("#mBuild").onclick=()=>setMode("build");
     $("#memToggle").onclick=()=>toggleMemory();
-    $("#memSearch").addEventListener("input",e=>{ Graph.highlight(e.target.value); if(!e.target.value) paintTopicHot("__none__"); });
-    $("#wipeMem").onclick=()=>{ if(confirm("Purge the entire memory core? This cannot be undone.")){ store.memories=[]; store.links=[]; store.saveMem(); Graph.load([],[]); refreshHud(); toast("Memory core purged."); } };
+    $("#memSearch").addEventListener("input",e=>{ Graph.highlight(e.target.value); paintTopicHot(e.target.value.trim().toLowerCase()); });
+    $("#wipeMem").onclick=purgeMemory;
 
-    // settings modal
-    const scrim=$("#scrim");
-    $("#settingsBtn").onclick=()=>scrim.classList.add("open");
-    $("#cfgClose").onclick=()=>scrim.classList.remove("open");
-    scrim.onclick=e=>{ if(e.target===scrim) scrim.classList.remove("open"); };
-    $("#cfgSave").onclick=()=>{
-      store.cfg.brain=$("#cfgBrain").value; store.cfg.key=$("#cfgKey").value.trim(); store.cfg.model=$("#cfgModel").value;
-      store.cfg.bridge=$("#cfgBridge").value.trim()||"http://localhost:8787";
-      store.cfg.speak=$("#cfgSpeak").checked; store.cfg.voice=$("#cfgVoice").value;
-      store.saveCfg(); scrim.classList.remove("open"); toast("Configuration saved.");
-    };
+    $("#settingsBtn").onclick=openSettings;
+    $("#cfgClose").onclick=closeSettings;
+    scrim.onclick=e=>{ if(e.target===scrim) closeSettings(); };
+    $("#cfgForm").addEventListener("submit",saveSettings);
 
     // keyboard: Space=talk, M=memory, Esc=close/stop
     window.addEventListener("keydown",e=>{
-      const typing=/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement?.tagName||"");
-      if(e.code==="Space" && !typing){ e.preventDefault(); toggleListen(); }
-      else if((e.key==="m"||e.key==="M") && !typing){ toggleMemory(); }
-      else if(e.key==="Escape"){ scrim.classList.remove("open"); Voice.shutUp(); if(state==="speaking")setState("idle"); if(document.body.classList.contains("memoryview")) toggleMemory(false); }
+      if(e.key==="Escape"){
+        if(settingsOpen()){ closeSettings(); return; }
+        Voice.shutUp(); if(state==="speaking")setState("idle");
+        if(document.body.classList.contains("memoryview")) toggleMemory(false);
+        return;
+      }
+      if(settingsOpen()||e.metaKey||e.ctrlKey||e.altKey) return;
+      const el=document.activeElement, tag=el?.tagName||"";
+      const typing=/^(INPUT|SELECT|TEXTAREA)$/.test(tag)||el?.isContentEditable;
+      if(typing) return;
+      if(e.code==="Space" && !e.repeat && !/^(BUTTON|A)$/.test(tag)){ e.preventDefault(); toggleListen(); }
+      else if(e.key==="m"||e.key==="M"){ toggleMemory(); }
     });
 
     setMode("talk"); setState("idle");

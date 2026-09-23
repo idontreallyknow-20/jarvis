@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#04070c" />
+<title>About JARVIS | how Joseph Leung's AI voice assistant works</title>
+<meta name="description" content="What JARVIS does, how to run it in two minutes on your Claude subscription, and who built it: Joseph Leung, a student founder from Richmond Hill, Ontario." />
+<meta name="author" content="Joseph Leung" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://jarvis-joseph-leung.vercel.app/about" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="author" href="https://josephleung-site.vercel.app/" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="JARVIS by Joseph Leung" />
+<meta property="og:locale" content="en_CA" />
+<meta property="og:title" content="About JARVIS | how Joseph Leung's AI voice assistant works" />
+<meta property="og:description" content="A voice assistant that runs on your Claude subscription and draws its memory as a holographic graph. Here's how it works and how to run it." />
+<meta property="og:url" content="https://jarvis-joseph-leung.vercel.app/about" />
+<meta property="og:image" content="https://jarvis-joseph-leung.vercel.app/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="The JARVIS glowing orb and memory graph, with the caption: an AI voice assistant by Joseph Leung" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="About JARVIS | how Joseph Leung's AI voice assistant works" />
+<meta name="twitter:description" content="A voice assistant that runs on your Claude subscription and draws its memory as a holographic graph." />
+<meta name="twitter:image" content="https://jarvis-joseph-leung.vercel.app/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "AboutPage",
+      "@id": "https://jarvis-joseph-leung.vercel.app/about#webpage",
+      "url": "https://jarvis-joseph-leung.vercel.app/about",
+      "name": "About JARVIS",
+      "inLanguage": "en-CA",
+      "isPartOf": { "@id": "https://jarvis-joseph-leung.vercel.app/#website" },
+      "about": { "@id": "https://jarvis-joseph-leung.vercel.app/#app" },
+      "author": { "@id": "https://josephleung-site.vercel.app/#joseph" },
+      "primaryImageOfPage": "https://jarvis-joseph-leung.vercel.app/jarvis-memory-graph.webp",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "JARVIS", "item": "https://jarvis-joseph-leung.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "About", "item": "https://jarvis-joseph-leung.vercel.app/about" }
+        ]
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://josephleung-site.vercel.app/#joseph",
+      "name": "Joseph Leung",
+      "alternateName": "Joseph Wah Sing Leung",
+      "url": "https://josephleung-site.vercel.app/",
+      "jobTitle": "Founder, Daily Brief HQ and NerfChess",
+      "homeLocation": { "@type": "Place", "name": "Richmond Hill, Ontario, Canada" },
+      "knowsAbout": ["Chess", "Calisthenics", "Startups", "Artificial intelligence", "Web development"],
+      "sameAs": [
+        "https://www.linkedin.com/in/joseph-leung-21b3473bb/",
+        "https://github.com/idontreallyknow-20",
+        "https://ratings.fide.com/profile/2636654",
+        "https://www.chess.ca/en/ratings/p/?id=167606",
+        "https://www.chess.com/member/squeakycrab",
+        "https://lichess.org/@/BigTrustedCrabby",
+        "https://lichess.org/@/UltraAddict2010",
+        "https://dailybriefhq.com",
+        "https://dailybriefhq.com/about",
+        "https://nerfchess.com"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://jarvis-joseph-leung.vercel.app/#app",
+      "name": "JARVIS",
+      "url": "https://jarvis-joseph-leung.vercel.app/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (web browser)",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+      "codeRepository": "https://github.com/idontreallyknow-20/jarvis",
+      "screenshot": "https://jarvis-joseph-leung.vercel.app/jarvis-memory-graph.webp",
+      "creator": { "@id": "https://josephleung-site.vercel.app/#joseph" }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#04070c;--cyan:#38e0ff;--cyan-rgb:56,224,255;--amber:#ffb54a;--amber-rgb:255,181,74;
+    --ink:#cfe9f3;--ink-dim:#86a9b8;--line:rgba(56,224,255,.18);--line-soft:rgba(56,224,255,.09);--panel:rgba(6,16,24,.62);
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(ellipse at 50% -10%,rgba(10,40,60,.55),transparent 60%),
+      radial-gradient(rgba(var(--cyan-rgb),.07) 1px,transparent 1px);
+    background-size:auto,46px 46px;background-attachment:fixed}
+  a{color:var(--cyan);text-underline-offset:3px}
+  a:hover{color:#eafaff}
+  :focus{outline:none}
+  :focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px}
+  header.top{display:flex;align-items:center;gap:16px;padding:18px 20px;max-width:1040px;margin:0 auto;font-family:var(--mono)}
+  .logo{font-weight:700;letter-spacing:.42em;font-size:17px;color:#eafaff;text-decoration:none;text-shadow:0 0 14px rgba(var(--cyan-rgb),.55)}
+  .grow{flex:1}
+  .cta{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#eafaff;
+    border:1px solid rgba(var(--cyan-rgb),.45);border-radius:9px;padding:9px 14px;white-space:nowrap;
+    background:linear-gradient(180deg,rgba(var(--cyan-rgb),.14),rgba(var(--cyan-rgb),.03));transition:.16s}
+  .cta:hover{border-color:var(--cyan);box-shadow:0 0 18px rgba(var(--cyan-rgb),.2)}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-dim);margin:48px 0 10px}
+  h1{font-size:clamp(32px,6vw,46px);line-height:1.12;margin:0 0 18px;color:#eafaff;letter-spacing:-.01em}
+  h2{font-family:var(--mono);font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--cyan);margin:56px 0 14px;font-weight:600}
+  .lead{font-size:19px;color:#dff4fb;margin:0 0 28px}
+  p{margin:0 0 16px}
+  figure{margin:8px -20px 0;padding:0}
+  figure img{display:block;width:100%;height:auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  figcaption{font-size:13px;color:var(--ink-dim);padding:10px 20px 0}
+  .cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:0;padding:0;list-style:none}
+  .cards li{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:16px 16px 14px;font-size:15px;line-height:1.6}
+  .cards b{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#eafaff;margin-bottom:6px}
+  ol.steps{padding-left:22px;margin:0 0 16px}
+  ol.steps li{margin-bottom:14px}
+  pre{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;
+    font-family:var(--mono);font-size:14px;line-height:1.55;color:#eafaff;margin:8px 0 0}
+  code{font-family:var(--mono);font-size:.9em;color:#eafaff;background:rgba(var(--cyan-rgb),.08);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px}
+  pre code{background:none;border:0;padding:0;font-size:inherit}
+  ul.plain{padding-left:20px;margin:0 0 16px}
+  ul.plain li{margin-bottom:8px}
+  .note{border-left:2px solid rgba(var(--amber-rgb),.7);padding:4px 0 4px 14px;color:#f3e3c7;font-size:15px}
+  .links{display:flex;flex-wrap:wrap;gap:8px 18px;padding:0;margin:4px 0 0;list-style:none;font-size:15px}
+  footer{margin:72px 0 0;border-top:1px solid var(--line-soft);padding:22px 20px 36px;text-align:center;
+    font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink-dim)}
+  footer a{color:var(--ink-dim)}
+  footer a:hover{color:#eafaff}
+  @media (max-width:560px){
+    body{font-size:16px}
+    header.top{padding:14px 16px}
+    .wrap{padding:0 16px}
+    figure{margin:8px -16px 0}
+    .lead{font-size:17px}
+    .kicker{margin-top:32px}
+    h2{margin-top:44px}
+  }
+</style>
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="/" aria-label="JARVIS home">JARVIS</a>
+    <div class="grow"></div>
+    <a class="cta" href="/">Open JARVIS</a>
+  </header>
+
+  <main class="wrap">
+    <p class="kicker">About the project</p>
+    <h1>A voice assistant with a memory you can see</h1>
+    <p class="lead">JARVIS is a free, open-source AI voice assistant built by Joseph Leung. You talk, it answers out loud, and every exchange becomes a glowing node in a holographic memory graph, linked to everything related you've said before.</p>
+
+    <figure>
+      <img src="/jarvis-memory-graph.webp" srcset="/jarvis-memory-graph-640.webp 640w, /jarvis-memory-graph.webp 1200w" sizes="(max-width:760px) 100vw, 720px"
+        width="1200" height="750" decoding="async"
+        alt="The JARVIS memory view: a glowing orb surrounded by connected memory nodes, with stats and topic threads in a side panel." />
+      <figcaption>The memory view after a few days of use. Related memories connect; press M to open it.</figcaption>
+    </figure>
+
+    <h2 id="features">What it does</h2>
+    <ul class="cards">
+      <li><b>Talk</b>Speak or type. JARVIS answers in a short, spoken reply using Claude, and reads it aloud in your browser's voice.</li>
+      <li><b>Build</b>Say a change out loud and Claude Code makes it in a real project folder on your machine, with only file read and edit access.</li>
+      <li><b>Memory core</b>Messages are stored in your browser and drawn as a live graph. Search it, click a node to recall it, or purge it all.</li>
+    </ul>
+
+    <h2 id="run">Run it in two minutes</h2>
+    <p>You need <a href="https://nodejs.org" rel="noopener">Node 18+</a> and <a href="https://claude.com/claude-code" rel="noopener">Claude Code</a> signed in with a Claude Pro or Max plan. No API key.</p>
+    <ol class="steps">
+      <li>Get the code and start the bridge (the small local server that talks to Claude):
+        <pre><code>git clone https://github.com/idontreallyknow-20/jarvis
+cd jarvis
+node bridge/server.mjs</code></pre></li>
+      <li><a href="/">Open JARVIS</a> in Chrome or Edge, press <b>Space</b> or tap the orb, and talk.</li>
+      <li>For Build mode, point the bridge at a project: <code>PROJECT_DIR=/path/to/project node bridge/server.mjs</code></li>
+    </ol>
+    <p class="note">Prefer an API key? Open Settings (⚙), set Talk brain to “Anthropic API key” and paste a key from console.anthropic.com. Talk mode then works without the bridge.</p>
+
+    <h2 id="privacy">Privacy and safety</h2>
+    <ul class="plain">
+      <li>Your memories, chat history and settings never leave your browser's local storage.</li>
+      <li>The bridge only listens on <code>127.0.0.1</code> and only accepts requests from localhost and this site, so other websites can't drive it.</li>
+      <li>Build mode can read and edit files but can't run commands unless you turn that on. Keep your project in git so every change is easy to review.</li>
+    </ul>
+
+    <h2 id="builder">Built by Joseph Leung</h2>
+    <p>I'm <a href="https://josephleung-site.vercel.app/" rel="author">Joseph Leung</a> (full name Joseph Wah Sing Leung), a Grade 11 student in Richmond Hill, Ontario. I'm a retired national-level chess player, I train calisthenics, and I write <a href="https://dailybriefhq.com" rel="noopener">Daily Brief HQ</a>, a newsletter on the economy and AI. I build projects like JARVIS on the way to starting companies.</p>
+    <p>I wanted an assistant that felt like the one in the films and actually remembered things, so I built one that shows you its memory instead of hiding it.</p>
+    <ul class="links">
+      <li><a href="https://josephleung-site.vercel.app/" rel="author">josephleung-site.vercel.app</a></li>
+      <li><a href="https://dailybriefhq.com" rel="noopener">Daily Brief HQ</a></li>
+      <li><a href="https://nerfchess.com" rel="noopener">NerfChess</a></li>
+      <li><a href="https://github.com/idontreallyknow-20" rel="noopener me">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/joseph-leung-21b3473bb/" rel="noopener me">LinkedIn</a></li>
+    </ul>
+  </main>
+
+  <footer>
+    Built by <a href="https://josephleung-site.vercel.app/" rel="author">Joseph Leung</a> · <a href="/">JARVIS</a> · <a href="https://github.com/idontreallyknow-20/jarvis" rel="noopener">Source on GitHub</a>
+  </footer>
+</body>
+</html>
