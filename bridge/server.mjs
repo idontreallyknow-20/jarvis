@@ -6,7 +6,7 @@
 // just Node's built-in `http` + `child_process`.
 //
 //   POST /build   { "prompt": "add a subscribe section" }
-//     -> runs:  claude -p "ultrathink <prompt>" --model claude-opus-4-8 \
+//     -> runs:  claude -p "ultrathink <prompt>" --model claude-opus-5 \
 //                       --permission-mode acceptEdits --output-format json \
 //                       --allowedTools "Read,Edit,Write"
 //     -> returns { summary, result, raw }
@@ -19,6 +19,10 @@
 //   from YOUR browser, on YOUR machine — the request never leaves localhost.
 //   Keep PROJECT_DIR inside a git repo so every change can be reviewed/reverted.
 //
+//   Only pages from ALLOWED_ORIGINS may call it (localhost + the hosted orb by
+//   default), and the Host header must be localhost, so a random website you
+//   visit can't drive the agent through your browser.
+//
 //   Run it:   node bridge/server.mjs
 // ============================================================================
 
@@ -29,10 +33,21 @@ import { resolve } from "node:path";
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 const HOST        = "127.0.0.1";                 // localhost ONLY — do not change to 0.0.0.0
-const PORT        = 8787;
+const PORT        = Number(process.env.PORT) || 8787;
 const PROJECT_DIR = resolve(process.env.PROJECT_DIR || process.cwd()); // where Claude Code edits
-const MODEL       = "claude-opus-4-8";           // falls back to "opus" if this string errors
+const MODEL       = process.env.JARVIS_MODEL || "claude-opus-5"; // falls back to "opus" if this string errors
 const RUN_TIMEOUT = 5 * 60 * 1000;               // 5 minutes per build, then we kill it
+
+// Web pages allowed to call the bridge from your browser. Any localhost port is
+// always allowed; add your own hosted copy with ALLOWED_ORIGINS="https://a.com,https://b.com".
+const ALLOWED_ORIGINS = new Set([
+  "https://jarvis-joseph-leung.vercel.app",
+  ...(process.env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim().replace(/\/+$/, "")).filter(Boolean),
+]);
+const LOCAL_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/;
+const LOCAL_HOST   = /^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/;
+const originAllowed = (o) => !o || LOCAL_ORIGIN.test(o) || ALLOWED_ORIGINS.has(o); // no Origin = curl / scripts
+const MODEL_NAME = /^[a-z0-9][a-z0-9.\-]{1,63}$/;  // model ids like claude-opus-5; never a --flag
 
 // Tools Claude Code is allowed to use. Read/Edit/Write are safe file ops.
 //
@@ -44,14 +59,18 @@ const ALLOWED_TOOLS = "Read,Edit,Write";         // safe default
 // const ALLOWED_TOOLS = "Read,Edit,Write,Bash";  // ⚠️  command execution enabled
 // ─────────────────────────────────────────────────────────────────────────────
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",            // your own hosted orb calls this from your browser
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+// CORS headers echo back only an allowed origin. Allow-Private-Network lets
+// Chrome's private-network preflight through when the orb is served over HTTPS.
+const cors = (origin) => (origin && originAllowed(origin) ? {
+  "Access-Control-Allow-Origin": origin,
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "content-type",
-};
+  "Access-Control-Allow-Private-Network": "true",
+  "Vary": "Origin",
+} : {});
 
 function json(res, code, obj) {
-  res.writeHead(code, { "content-type": "application/json", ...CORS });
+  res.writeHead(code, { "content-type": "application/json", ...cors(res.req.headers.origin) });
   res.end(JSON.stringify(obj));
 }
 
@@ -137,7 +156,14 @@ async function runWithFallback(makeArgs, model, label) {
 }
 
 const server = createServer(async (req, res) => {
-  if (req.method === "OPTIONS") { res.writeHead(204, CORS); return res.end(); }
+  const origin = req.headers.origin;
+  // Reject DNS-rebinding (Host isn't localhost) and pages that aren't on the allowlist.
+  if (!LOCAL_HOST.test(req.headers.host || "")) return json(res, 403, { error: "Bridge only answers on localhost." });
+  if (!originAllowed(origin)) {
+    console.log(`  \x1b[33m⊘ blocked request from ${origin}\x1b[0m (add it to ALLOWED_ORIGINS if it's yours)`);
+    return json(res, 403, { error: `Origin ${origin} is not allowed. Start the bridge with ALLOWED_ORIGINS=${origin} to permit it.` });
+  }
+  if (req.method === "OPTIONS") { res.writeHead(204, cors(origin)); return res.end(); }
 
   if (req.method === "GET" && req.url === "/health") {
     return json(res, 200, { ok: true, project: PROJECT_DIR, model: MODEL, tools: ALLOWED_TOOLS, endpoints: ["/talk", "/build"] });
@@ -145,7 +171,7 @@ const server = createServer(async (req, res) => {
 
   const readBody = (cb) => {
     let raw = "";
-    req.on("data", (c) => { raw += c; if (raw.length > 1e6) req.destroy(); });
+    req.on("data", (c) => { raw += c; if (raw.length > 1e6) { json(res, 413, { error: "Body too large" }); req.destroy(); } });
     req.on("end", () => { let o; try { o = JSON.parse(raw || "{}"); } catch { return json(res, 400, { error: "Bad JSON body" }); } cb(o); });
   };
 
@@ -154,8 +180,8 @@ const server = createServer(async (req, res) => {
     return readBody(async (o) => {
       const prompt = (o.prompt || "").trim();
       if (!prompt) return json(res, 400, { error: "Missing 'prompt'." });
-      const model = o.model || MODEL;
-      const transcript = (o.history || []).slice(-12)
+      const model = MODEL_NAME.test(o.model || "") ? o.model : MODEL;
+      const transcript = (Array.isArray(o.history) ? o.history : []).slice(-12)
         .map(m => `${m.role === "user" ? "User" : "JARVIS"}: ${m.content}`).join("\n");
       const composed = (transcript ? transcript + "\n" : "") + "User: " + prompt + "\nJARVIS:";
       const r = await runWithFallback((m) => talkArgs(composed, m), model, "talk");
@@ -188,6 +214,7 @@ server.listen(PORT, HOST, () => {
   console.log(`  listening   http://${HOST}:${PORT}`);
   console.log(`  project     ${PROJECT_DIR}`);
   console.log(`  model       ${MODEL}   build tools: ${ALLOWED_TOOLS}`);
+  console.log(`  origins     localhost, ${[...ALLOWED_ORIGINS].join(", ")}`);
   console.log(`  \x1b[2mPOST /talk  {"prompt":"…"}   → conversation (no file edits)\x1b[0m`);
   console.log(`  \x1b[2mPOST /build {"prompt":"…"}   → Claude Code edits files\x1b[0m`);
   console.log(`  \x1b[32m✓  uses your Claude subscription via the CLI — no API key needed.\x1b[0m`);
