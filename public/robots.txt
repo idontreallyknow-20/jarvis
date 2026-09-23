@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jarvis-joseph-leung.vercel.app/sitemap.xml
